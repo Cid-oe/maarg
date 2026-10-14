@@ -1,5 +1,6 @@
 """Tests for input-filtering logic (is_loggable / filter_inputs)."""
 
+import math
 from pathlib import Path
 
 import matplotlib
@@ -264,12 +265,11 @@ def test_nested_empty_collections_are_loggable():
     assert is_loggable({"a": []})
 
 def test_split_output_with_nan_and_inf():
-    import math
-    metrics, artifacts, other = split_output({"inf": float("inf"), "nan": float("nan")}, artifacts_dir="unused")
+    metrics, _artifacts, _other = split_output({"inf": float("inf"), "nan": float("nan")}, artifacts_dir="unused")
     assert math.isinf(metrics["inf"])
     assert math.isnan(metrics["nan"])
 
 def test_split_output_with_exception_object():
     err = ValueError("test")
-    metrics, artifacts, other = split_output(err, artifacts_dir="unused")
+    _metrics, _artifacts, other = split_output(err, artifacts_dir="unused")
     assert "ValueError" in other["result"]
